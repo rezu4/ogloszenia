@@ -1,0 +1,173 @@
+﻿html {
+    height: 100%;
+}
+body {
+    font-size: .85em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    color: #232323;
+    background-color: #fff;
+    height: 100%;
+}
+
+header, footer, nav, section {
+    display: block;
+}
+
+
+/* Styles for basic forms
+-----------------------------------------------------------*/
+fieldset {
+    border: 1px solid #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+textarea {
+    min-height: 75px;
+}
+
+.editor-label {
+    margin: 1em 0 0 0;
+}
+
+.editor-field {
+    margin: 0.5em 0 0 0;
+}
+
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #f00;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #f00;
+    background-color: #fee;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #f00;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+div.content {
+    height: 100%;
+}
+
+ul.offers {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    float: left;
+    width: 500px;    
+    height: 100%;
+    overflow: auto;
+    margin-right: 17px;
+}
+
+
+ul.offers li .cena b {
+    color: red;
+}
+
+ul.offers li.selected,
+ul.offers li:hover {
+    background-color: #EFCFBB   
+}
+
+div.offer {
+    
+}
+
+.clear {
+    clear: both;
+    height: 0;
+    font-size: 0;
+}
+ul.offers li {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: #efefef;
+    margin-bottom: 2px;
+}
+
+    .offer .header {
+        font-weight: bold;
+        font-size: 1.3em;        
+    }
+
+        .offer .header .cena b {
+            color: red;
+        }
+
+    .offer .pictures {
+        margin-top: 10px;
+    }
+
+    .offer .pictures img {
+        margin: 8px;
+    }
+
+img[data-action="zoom"] {
+  cursor: pointer;
+  cursor: -webkit-zoom-in;
+  cursor: -moz-zoom-in;
+}
+
+.zoom-img,
+.zoom-img-wrap {
+  position: relative;
+    display: inline-block;
+  z-index: 666;
+}
+
+img.zoom-img {
+  cursor: pointer;
+  cursor: -webkit-zoom-out;
+  cursor: -moz-zoom-out;
+}
+
+.zoom-overlay {
+  z-index: 420;
+  background: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+.zoom-overlay-open,
+.zoom-overlay-transitioning {
+  cursor: default;
+}
+
+.zoom-overlay-open .zoom-overlay {
+  opacity: 1;
+}
+
+.user_edit .row {
+    margin-bottom: 10px;
+}
+
+.user_edit .row textarea {
+    width: 100%;
+    max-width: 800px;
+}

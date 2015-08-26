@@ -1,0 +1,159 @@
+﻿@model Scraper.Web.Models.OfferSearchViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <ul class="offers">
+        @foreach (var offer in Model.Offers)
+        {
+            <li id="@offer.Id">
+                <a href="#@offer.Id"></a>
+                <span class="title"><a target="_blank" href="@offer.Url">@offer.Title</a></span>
+                <span class="data">@offer.Date.ToString("yyyy-MM-dd")</span>
+                <span class="cena"><b>@offer.Price</b></span>
+            </li>
+        }
+    </ul>
+    <div class="offer">
+        <div class="header">
+            <span class="title"></span>
+            <span class="data"></span>
+            <span class="cena">Cena: <b></b></span>
+        </div>
+        <p class="description"></p>
+        <div class="pictures">            
+        </div>
+        <div class="user_edit">
+            <div class="row">
+                <label for="attractivenes">Atrakcyjność</label>
+                <select id="attractivenes">
+                    <option value="0">bardzo słaba</option>
+                    <option value="1">słaba</option>
+                    <option value="2">może być</option>
+                    <option value="3">dobra</option>
+                    <option value="4">bardzo dobra</option>
+                </select>
+                <input type="checkbox" id="have_seen" /><label for="have_seen">Czy obejrzane ?</label>
+                <input type="checkbox" id="hide" /><label for="hide">Ukryj</label>
+            </div>
+            <div class="row">
+                <textarea id="notes" cols="100" rows="10"></textarea>
+            </div>
+            <div class="row">
+                <button id="save">Zapisz</button>
+            </div>
+            </div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+@section scripts
+{
+    <script>
+        window['offers_data'] = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Offers));
+    </script>
+    <script>
+        $("img.lazy").lazyload({
+            effect: "fadeIn",
+            load: function() {
+                var el = $(this);
+                el.attr('data-action', 'zoom');
+            }
+        });
+
+        var offersById = {};
+        var selectedOffer = null;
+
+        for (var i = 0; i < offers_data.length; i++) {
+            var o = offers_data[i];
+            offersById[o.Id] = o;
+        }
+
+
+        function renderoffer(offer) {
+            moment.locale('pl');
+            $('.offer .title').html('<a href="' + offer.url + '" target="_blank">' + offer.Title + '</a>');
+            $('.offer .cena b').html(offer.Price);
+
+            var strDate = moment(new Date(offer.Date)).format('L');
+
+            $('.offer .data').html(strDate);
+
+            $('.offer .description').html(offer.Description);
+            var html = [];
+            for (var i = 0; i < offer.Pictures.length; i++) {
+                var p = offer.Pictures[i];
+                html.push('<img data-action="zoom" src="' + p + '" height="200">');
+            }
+            $('.offer .pictures').html(html.join(''));
+
+            $('#attractivenes').val(offer.Attractivenes);
+            $('#have_seen').prop("checked", offer.HaveSeen);
+            $('#hide').prop("checked", offer.Hide);
+            $('#notes').val(offer.Notes);            
+        }
+
+        var urlParts = document.location.href.split('#');
+        if (urlParts.length == 2) {
+            var id = urlParts[1];
+            if (offersById[id]) {
+                selectedOffer = offersById[id];
+                renderoffer(selectedOffer);
+            }
+        }
+
+        $('ul.offers li').click(function(e) {
+
+            $('.offers .selected').removeClass('selected');
+            if (!$(this).hasClass('selected')) {
+                $(this).addClass('selected');
+            }
+
+
+            window.history.pushState({}, "", '#' + this.id);
+            
+            selectedOffer = offersById[this.id];
+            renderoffer(selectedOffer);
+
+        });
+
+        var getFormData = function() {
+            var postData = {
+                offerId: selectedOffer.Id,
+                attractivenes: 0,
+                haveSeen: false,
+                hide: false,
+                notes: null
+            };
+
+            postData.attractivenes = $('#attractivenes').val();
+            postData.haveSeen = $('#have_seen').is(':checked');
+            postData.hide = $('#hide').is(':checked');
+            postData.notes = $('#notes').val();
+            return postData;
+        };
+
+        $('#save').click(function() {
+            var data = getFormData();
+            
+            $.ajax({
+                type: "POST",
+                url: "/Home/Save",
+                data: data,
+                dataType: "json",
+                success: function(jsonData) {
+                    if (jsonData != null) {
+                        selectedOffer = offersById[data.offerId] = jsonData;                        
+                    } else {
+                        alert('error during save');
+                    }                    
+                }
+            });
+
+        });
+
+    </script>
+}
