@@ -123,7 +123,11 @@ namespace Scraper.Scraper
 
                     foreach (var teaser in result.Teasers)
                     {
-                        _storage.Save(teaser);
+                        var offer = _storage.GetOffer(teaser.Id);
+                        if (offer == null)
+                        {
+                            _storage.Save(teaser);
+                        }
                     }
                 }
 
