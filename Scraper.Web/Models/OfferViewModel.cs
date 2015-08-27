@@ -20,6 +20,6 @@ namespace Scraper.Web.Models
         public int Attractivenes { get; set; }
         public bool HaveSeen { get; set; }
         public bool Hide { get; set; }
-        public string Notes { get; set; }        
+        public string Notes { get; set; }
     }
 }

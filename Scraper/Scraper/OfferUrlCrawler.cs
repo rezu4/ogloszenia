@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using CsQuery;
+using CsQuery.ExtensionMethods;
 using Scraper.Storage;
 using Scrapper.Core.Utils;
 
@@ -34,7 +35,7 @@ namespace Scraper.Scraper
                 count++;
                 var elapsed = DateTime.Now - startTime;
                 var speed = (int) (count*1000/elapsed.TotalMilliseconds);
-                var timeLeft = (int) (teasers.Count - count/(speed + 0.001));
+                var timeLeft = (int) ((teasers.Count - count)/(speed + 0.001));
 
 
                 Console.Out.WriteLine("downloaded full offers {0}, speed {1}/s, complete in {2}:{3} [m:s]", count, speed,
@@ -51,11 +52,26 @@ namespace Scraper.Scraper
 
             var dom = new CQ(html);
 
-            var fullDescription = dom[".pokaz_ogloszenie_tresc"];
-            if (fullDescription.Length > 0)
+            var header = dom[".wspolny_naglowek_tytul"][0].InnerHTML;
+            if (header.Contains("PRYWATNA"))
             {
-                teaser.Description =  TextHelper.CleanText(fullDescription[0].InnerHTML);
+                teaser.PrivateOffer = true;
             }
+            
+            var fullDescription = dom[".pokaz_ogloszenie_tresc"];
+            for (var i = 0; i < fullDescription.Length; i++)
+            {
+                teaser.Description =  TextHelper.CleanText(fullDescription.RenderSelection());
+            }
+
+            var kontakt = dom["ul.pokaz_ogloszenie"][0].OuterHTML;
+
+            Regex rgx = new Regex("<script.+script>", RegexOptions.Singleline);
+            Match match = rgx.Match(kontakt);
+            if (match.Success)
+                kontakt = rgx.Replace(kontakt, "");
+
+            teaser.Description += kontakt;
 
             var pictureEls = dom["img.pokaz_ogloszenie_obrazek"];
 

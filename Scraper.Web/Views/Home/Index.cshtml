@@ -19,6 +19,7 @@
     </ul>
     <div class="offer">
         <div class="header">
+            <span class="private"></span>
             <span class="title"></span>
             <span class="data"></span>
             <span class="cena">Cena: <b></b></span>
@@ -37,7 +38,7 @@
                     <option value="4">bardzo dobra</option>
                 </select>
                 <input type="checkbox" id="have_seen" /><label for="have_seen">Czy obejrzane ?</label>
-                <input type="checkbox" id="hide" /><label for="hide">Ukryj</label>
+                <input type="checkbox" id="hide" /><label for="hide">Ukryj forever</label>
             </div>
             <div class="row">
                 <textarea id="notes" cols="100" rows="10"></textarea>
@@ -75,7 +76,12 @@
 
         function renderoffer(offer) {
             moment.locale('pl');
-            $('.offer .title').html('<a href="' + offer.url + '" target="_blank">' + offer.Title + '</a>');
+            if (offer.PrivateOffer) {
+                $('.offer .private').html('PRYWATNA: ').addClass('privateOffer');
+            } else {
+                $('.offer .private').html('OD FIRMY: ').removeClass('privateOffer');
+            }
+            $('.offer .title').html('<a href="' + offer.Url + '" target="_blank">' + offer.Title + '</a>');
             $('.offer .cena b').html(offer.Price);
 
             var strDate = moment(new Date(offer.Date)).format('L');
@@ -93,7 +99,7 @@
             $('#attractivenes').val(offer.Attractivenes);
             $('#have_seen').prop("checked", offer.HaveSeen);
             $('#hide').prop("checked", offer.Hide);
-            $('#notes').val(offer.Notes);            
+            $('#notes').val(offer.Notes);
         }
 
         var urlParts = document.location.href.split('#');
@@ -114,7 +120,7 @@
 
 
             window.history.pushState({}, "", '#' + this.id);
-            
+
             selectedOffer = offersById[this.id];
             renderoffer(selectedOffer);
 
@@ -138,7 +144,7 @@
 
         $('#save').click(function() {
             var data = getFormData();
-            
+
             $.ajax({
                 type: "POST",
                 url: "/Home/Save",
@@ -146,10 +152,14 @@
                 dataType: "json",
                 success: function(jsonData) {
                     if (jsonData != null) {
-                        selectedOffer = offersById[data.offerId] = jsonData;                        
+                        selectedOffer = offersById[data.offerId] = jsonData;
+                        if (data.hide) {
+                            window.history.pushState({}, "", "/");
+                            window.location.reload();
+                        }
                     } else {
                         alert('error during save');
-                    }                    
+                    }
                 }
             });
 

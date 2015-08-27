@@ -21,7 +21,7 @@ namespace Scraper.Web.Controllers
 
         public ActionResult Index()
         {
-            var offers = _storage.Search("*:*");
+            var offers = _storage.Search("Hide:0");
             var viewModel = new OfferSearchViewModel();
             viewModel.Offers = new List<OfferViewModel>();
 

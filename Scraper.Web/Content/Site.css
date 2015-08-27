@@ -171,3 +171,13 @@ img.zoom-img {
     width: 100%;
     max-width: 800px;
 }
+
+
+.private.privateOffer {
+    color: green;
+}
+
+.private {
+    color: red;
+}
+

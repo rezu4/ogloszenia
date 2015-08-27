@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 using Scraper.Scraper;
 using Scraper.Storage;
 using Scrapper.Core;
@@ -19,10 +18,6 @@ namespace Scraper
 
         static void Main(string[] args)
         {
-            var now = DateTime.Now.Date;
-            var xx = now.AddDays(90);
-            Console.Out.WriteLine(xx);
-            /*
             Initialize();
 
             var crawler = _container.Resolve<IOfferUrlCrawler>();            
@@ -31,7 +26,7 @@ namespace Scraper
             
 
              var storage = _container.Resolve<IOfferStorage>();
-            */
+            
             //storage.Save(offer);
             //var offers = storage.Search("*:*");
             //var teasers = storage.GetTeasers();
