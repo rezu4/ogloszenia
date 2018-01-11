@@ -8,7 +8,7 @@ namespace Scraper
     class Program
     {
         private static UnityContainer _container;
-
+		// --
         private static void Initialize()
         {
             _container = new UnityContainer();
